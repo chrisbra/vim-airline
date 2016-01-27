@@ -34,6 +34,7 @@ function! s:toggle_on()
   call airline#extensions#tabline#tabs#on()
   call airline#extensions#tabline#buffers#on()
 
+  let s:oldtabline = &tabline
   set tabline=%!airline#extensions#tabline#get()
 endfunction
 
@@ -94,7 +95,7 @@ function! airline#extensions#tabline#get()
   if s:show_buffers && curtabcnt == 1 || !s:show_tabs
     return airline#extensions#tabline#buffers#get()
   else
-    return airline#extensions#tabline#tabs#get()
+    return airline#extensions#tabline#tabs#get(s:oldtabline)
   endif
 endfunction
 

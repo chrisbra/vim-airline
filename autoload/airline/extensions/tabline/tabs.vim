@@ -6,6 +6,7 @@ let s:tab_nr_type = get(g:, 'airline#extensions#tabline#tab_nr_type', 0)
 let s:show_close_button = get(g:, 'airline#extensions#tabline#show_close_button', 1)
 let s:show_tab_type = get(g:, 'airline#extensions#tabline#show_tab_type', 1)
 let s:close_symbol = get(g:, 'airline#extensions#tabline#close_symbol', 'X')
+let s:keep_orig_tabl = get(g:, 'airline#extensions#tabline#keep_orig_tabline', 0)
 
 let s:current_bufnr = -1
 let s:current_tabnr = -1
@@ -28,7 +29,21 @@ function! airline#extensions#tabline#tabs#invalidate()
   let s:current_bufnr = -1
 endfunction
 
-function! airline#extensions#tabline#tabs#get()
+function! airline#extensions#tabline#tabs#old_tabline_list(item)
+  let item=matchstr(a:item, '^\(%!\)\?\zs.*')
+  let list = []
+  try
+    let list=split(eval(item), '\(%\dT\)\?%#\w\+# \?')
+    let list=filter(list, 'v:val!~#''\(%T\)\?%=''')
+    let list=filter(list, 'v:val!~#''%999X.\?''')
+  catch
+    " no-op
+  endtry
+  return list
+endfunction
+
+function! airline#extensions#tabline#tabs#get(...)
+  " a:1: original tabline
   let curbuf = bufnr('%')
   let curtab = tabpagenr()
   call s:map_keys()
@@ -37,34 +52,54 @@ function! airline#extensions#tabline#tabs#get()
       return s:current_tabline
     endif
   endif
+  if s:keep_orig_tabl && a:0 && !empty(a:1)
+    let list=airline#extensions#tabline#tabs#old_tabline_list(a:1)
+  endif
 
   let b = airline#extensions#tabline#new_builder()
-  for i in range(1, tabpagenr('$'))
-    if i == curtab
-      let group = 'airline_tabsel'
-      if g:airline_detect_modified
-        for bi in tabpagebuflist(i)
-          if getbufvar(bi, '&modified')
-            let group = 'airline_tabmod'
-          endif
-        endfor
+  if exists("list") && !empty(list)
+    let i=1
+    for item in list
+      if i == curtab
+        let group = 'airline_tabsel'
+      else
+        let group = 'airline_tab'
       endif
-      let s:current_modified = (group == 'airline_tabmod') ? 1 : 0
-    else
-      let group = 'airline_tab'
-    endif
-    let val = '%('
-    if s:show_tab_nr
-      if s:tab_nr_type == 0
-        let val .= (g:airline_symbols.space).'%{len(tabpagebuflist('.i.'))}'
-      elseif s:tab_nr_type == 1
-        let val .= (g:airline_symbols.space).i
-      else "== 2
-        let val .= (g:airline_symbols.space).i.'.%{len(tabpagebuflist('.i.'))}'
+      call b.add_section(group, '%'.i.'T'.item)
+      let i+=1
+    endfor
+    call b.add_raw('%T')
+    call b.add_section('airline_tabfill', '')
+    call b.split()
+
+  else
+    for i in range(1, tabpagenr('$'))
+      if i == curtab
+        let group = 'airline_tabsel'
+        if g:airline_detect_modified
+          for bi in tabpagebuflist(i)
+            if getbufvar(bi, '&modified')
+              let group = 'airline_tabmod'
+            endif
+          endfor
+        endif
+        let s:current_modified = (group == 'airline_tabmod') ? 1 : 0
+      else
+        let group = 'airline_tab'
       endif
-    endif
-    call b.add_section(group, val.'%'.i.'T %{airline#extensions#tabline#title('.i.')} %)')
-  endfor
+      let val = '%('
+      if s:show_tab_nr
+        if s:tab_nr_type == 0
+          let val .= (g:airline_symbols.space).'%{len(tabpagebuflist('.i.'))}'
+        elseif s:tab_nr_type == 1
+          let val .= (g:airline_symbols.space).i
+        else "== 2
+          let val .= (g:airline_symbols.space).i.'.%{len(tabpagebuflist('.i.'))}'
+        endif
+      endif
+      call b.add_section(group, val.'%'.i.'T %{airline#extensions#tabline#title('.i.')} %)')
+    endfor
+  endif
 
   call b.add_raw('%T')
   call b.add_section('airline_tabfill', '')

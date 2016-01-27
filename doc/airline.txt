@@ -572,6 +572,12 @@ exposed.
   let airline#extensions#tabline#ignore_bufadd_pat =
             \ '\c\vgundo|undotree|vimfiler|tagbar|nerd_tree'
 
+* configure to only beautify an existing tabline (e.g. from a different
+  plugin (vim-ctrlspace) >
+  let airline#extensions#tabline#keep_orig_tabline = 0
+<
+  Note: This is an experimental setting.
+
 <
 Note: Enabling this extension will modify 'showtabline' and 'guioptions'.
 
