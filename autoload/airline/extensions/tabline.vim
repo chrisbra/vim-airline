@@ -49,7 +49,7 @@ function! s:update_tabline()
   elseif !get(g:, 'airline#extensions#tabline#enabled', 0)
     return
   " return, if buffer matches ignore pattern or is directory (netrw)
-  elseif empty(match) 
+  elseif empty(match)
         \ || match(match, s:ignore_bufadd_pat) > -1
         \ || isdirectory(expand("<afile>"))
     return
