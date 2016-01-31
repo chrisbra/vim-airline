@@ -15,7 +15,7 @@ describe 'active builder'
     call s:builder.add_section('Normal', 'hello')
     call s:builder.add_section('Search', 'world')
     let stl = s:builder.build()
-    Expect stl =~ '%#Normal#hello%#Normal_to_Search#>%#Search#world'
+    Expect stl =~ '%#Normal#hello%#Normal_to_Search_l#>%#Search#world'
   end
 
   it 'should reuse highlight group if background colors match'
@@ -33,7 +33,7 @@ describe 'active builder'
     call s:builder.add_section('Foo1', 'hello')
     call s:builder.add_section('Foo2', 'world')
     let stl = s:builder.build()
-    Expect stl =~ '%#Foo1#hello%#Foo1_to_Foo2#>%#Foo2#world'
+    Expect stl =~ '%#Foo1#hello%#Foo1_to_Foo2_l#>%#Foo2#world'
   end
 
   it 'should split left/right sections'
@@ -47,7 +47,7 @@ describe 'active builder'
     call s:builder.add_section('Normal', 'hello')
     call s:builder.add_section('Search', 'world')
     let stl = s:builder.build()
-    Expect stl =~ 'hello%#Normal_to_Search#<%#Search#world'
+    Expect stl =~ 'hello%#Normal_to_Search_r#<%#Search#world'
   end
 
   it 'should not repeat the same highlight group'
@@ -94,7 +94,7 @@ describe 'inactive builder'
     call s:builder.add_section('Normal', 'hello')
     call s:builder.add_section('Search', 'world')
     let stl = s:builder.build()
-    Expect stl =~ '%#Normal_inactive#hello%#Normal_to_Search_inactive#>%#Search_inactive#world'
+    Expect stl =~ '%#Normal_inactive#hello%#Normal_to_Search_l_inactive#>%#Search_inactive#world'
   end
 
   it 'should not render accents'
