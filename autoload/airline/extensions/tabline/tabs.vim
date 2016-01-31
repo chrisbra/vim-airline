@@ -44,7 +44,7 @@ function! airline#extensions#tabline#tabs#get()
   let buffers = tabpagebuflist(curtab)
   for nr in buffers
     let group = airline#extensions#tabline#group_of_bufnr(buffers, nr)
-    call b.add_section(group, s:spc.'%(%{airline#extensions#tabline#get_buffer_name('.nr.')}%)'.s:spc)
+    call b.add_section_spaced(group, '%(%{airline#extensions#tabline#get_buffer_name('.nr.')}%)')
   endfor
 
   call b.add_section('airline_tabfill', '')
