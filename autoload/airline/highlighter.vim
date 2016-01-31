@@ -95,7 +95,7 @@ function! s:exec_separator(dict, from, to, inverse, suffix)
   endif
   let l:from = airline#themes#get_highlight(a:from.a:suffix)
   let l:to = airline#themes#get_highlight(a:to.a:suffix)
-  let group = a:from.'_to_'.a:to.a:suffix
+  let group = a:from.'_to_'.a:to.a:suffix. (a:inverse ? '_l' : '_r')
   if a:inverse
     let colors = [ l:from[1], l:to[1], l:from[3], l:to[3] ]
   else
