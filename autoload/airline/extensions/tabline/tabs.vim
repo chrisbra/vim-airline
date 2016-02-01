@@ -4,7 +4,6 @@
 let s:show_tab_nr = get(g:, 'airline#extensions#tabline#show_tab_nr', 1)
 let s:tab_nr_type = get(g:, 'airline#extensions#tabline#tab_nr_type', 0)
 let s:show_close_button = get(g:, 'airline#extensions#tabline#show_close_button', 1)
-let s:show_tab_type = get(g:, 'airline#extensions#tabline#show_tab_type', 1)
 let s:close_symbol = get(g:, 'airline#extensions#tabline#close_symbol', 'X')
 let s:spc = g:airline_symbols.space
 
@@ -77,12 +76,9 @@ function! airline#extensions#tabline#tabs#get()
     call b.add_section(group, '%T'.i.' tab ' . i)
   endfor
 
-  " if s:show_close_button
-  "   call b.add_section('airline_tab', ' %999X'.s:close_symbol.' ')
-  " endif
-  " if s:show_tab_type
-  "   call b.add_section('airline_tabtype', ' tabs ')
-  " endif
+   if s:show_close_button
+     call b.add_section('airline_tab', ' %999X'.s:close_symbol.' ')
+   endif
 
   let s:current_bufnr = curbuf
   let s:current_tabnr = curtab
