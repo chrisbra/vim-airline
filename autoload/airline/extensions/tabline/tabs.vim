@@ -1,8 +1,6 @@
 " MIT License. Copyright (c) 2013-2016 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
-let s:show_tab_nr = get(g:, 'airline#extensions#tabline#show_tab_nr', 1)
-let s:tab_nr_type = get(g:, 'airline#extensions#tabline#tab_nr_type', 0)
 let s:show_close_button = get(g:, 'airline#extensions#tabline#show_close_button', 1)
 let s:close_symbol = get(g:, 'airline#extensions#tabline#close_symbol', 'X')
 let s:spc = g:airline_symbols.space
@@ -64,16 +62,7 @@ function! airline#extensions#tabline#tabs#get()
     else
       let group = 'airline_tab'
     endif
-    " if s:show_tab_nr
-    "   if s:tab_nr_type == 0
-    "     let tablen = s:spc . '%{len(tabpagebuflist('.i.'))}'
-    "   elseif s:tab_nr_type == 1
-    "     let tablen = s:spc . i
-    "   else "== 2
-    "     let tablen = s:spc . i . '.%{len(tabpagebuflist('.i.'))}'
-    "   endif
-    " endif
-    call b.add_section(group, '%T'.i.' tab ' . i)
+    call b.add_section(group, '%T'.i.' tab)
   endfor
 
    if s:show_close_button
