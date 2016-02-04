@@ -43,7 +43,8 @@ function! airline#extensions#tabline#tabs#get()
     let group = airline#extensions#tabline#group_of_bufnr(buffers, nr)
     call b.add_section_spaced(group, '%(%{airline#extensions#tabline#get_buffer_name('.nr.')}%)')
   endfor
-
+  " truncate
+  call b.add_raw('%<')
   call b.add_section('airline_tabfill', '')
   call b.split()
   call b.add_section('airline_tabfill', '')
@@ -64,6 +65,7 @@ function! airline#extensions#tabline#tabs#get()
     endif
     call b.add_section(group, '%T'.i.' tab')
   endfor
+  call b.add_raw('%<')
 
    if s:show_close_button
      call b.add_section('airline_tab', ' %999X'.s:close_symbol.' ')
