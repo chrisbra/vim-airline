@@ -62,7 +62,7 @@ function! airline#extensions#tabline#tabs#get()
     else
       let group = 'airline_tab'
     endif
-    call b.add_section(group, '%T'.i.' tab)
+    call b.add_section(group, '%T'.i.' tab')
   endfor
 
    if s:show_close_button
