@@ -51,24 +51,24 @@ function! airline#extensions#tabline#tabs#get()
 
   for i in range(1, tabpagenr('$'))
     if i == curtab
-      let group = 'airline_tabsel'
+      let group = 'airline_tabsel_right'
       if g:airline_detect_modified
         for bi in tabpagebuflist(i)
           if getbufvar(bi, '&modified')
-            let group = 'airline_tabmod'
+            let group = 'airline_tabmod_right'
           endif
         endfor
       endif
-      let s:current_modified = (group == 'airline_tabmod') ? 1 : 0
+      let s:current_modified = (group == 'airline_tabmod_right') ? 1 : 0
     else
-      let group = 'airline_tab'
+      let group = 'airline_tab_right'
     endif
     call b.add_section(group, '%'.i.'Ttab '.i. ' ')
   endfor
   call b.add_raw('%<')
 
    if s:show_close_button
-     call b.add_section('airline_tab', ' %999X'.s:close_symbol.' ')
+     call b.add_section('airline_tab_right', ' %999X'.s:close_symbol.' ')
    endif
 
   let s:current_bufnr = curbuf

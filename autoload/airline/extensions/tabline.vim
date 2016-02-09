@@ -93,6 +93,7 @@ function! airline#extensions#tabline#load_theme(palette)
   call airline#highlighter#exec('airline_tabhid', l:tabhid)
 
   " Theme for tabs on the right
+  let l:tab_right     = get(colors, 'airline_tab_right',    a:palette.normal.airline_b)
   let l:tabsel_right  = get(colors, 'airline_tabsel_right', a:palette.normal.airline_a)
   let l:tabmod_right  = get(colors, 'airline_tabmod_right', a:palette.insert.airline_a)
   let l:tabhid_right  = get(colors, 'airline_tabhid_right', a:palette.normal.airline_c)
@@ -102,6 +103,7 @@ function! airline#extensions#tabline#load_theme(palette)
     "Fall back to normal airline_c if modified airline_c isn't present
     let l:tabmodu_right = get(colors, 'airline_tabmod_unsel_right', a:palette.normal.airline_c)
   endif
+  call airline#highlighter#exec('airline_tab_right',    l:tab_right)
   call airline#highlighter#exec('airline_tabsel_right', l:tabsel_right)
   call airline#highlighter#exec('airline_tabmod_right', l:tabmod_right)
   call airline#highlighter#exec('airline_tabhid_right', l:tabhid_right)
