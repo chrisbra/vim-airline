@@ -6,6 +6,7 @@ scriptencoding utf-8
 let s:has_fugitive = exists('*fugitive#head')
 let s:has_lawrencium = exists('*lawrencium#statusline')
 let s:has_vcscommand = get(g:, 'airline#extensions#branch#use_vcscommand', 0) && exists('*VCSCommandGetStatusLine')
+let s:shell_err_rw   = v:version > 800 || v:version == 800 && has("patch148")
 
 if !s:has_fugitive && !s:has_lawrencium && !s:has_vcscommand
   finish
@@ -75,7 +76,11 @@ function! s:get_git_untracked(file)
   if has_key(s:untracked_git, a:file)
     let untracked = s:untracked_git[a:file]
   else
+    let shell_err = v:shell_error
     let output    = system('git status --porcelain -- '. shellescape(a:file))
+    if s:shell_err_rw
+      let v:shell_error = shell_err
+    endif
     if output[0:1] is# '??' && output[3:-2] is? a:file
       let untracked = get(g:, 'airline#extensions#branch#notexists', g:airline_symbols.notexists)
     endif
@@ -94,8 +99,12 @@ function! s:get_hg_untracked(file)
     if has_key(s:untracked_hg, a:file)
       let untracked = s:untracked_hg[a:file]
     else
+      let shell_err = v:shell_error
       let untracked = (system('hg status -u -- '. shellescape(a:file))[0] is# '?'  ?
             \ get(g:, 'airline#extensions#branch#notexists', g:airline_symbols.notexists) : '')
+      if s:shell_err_rw
+        let v:shell_error = shell_err
+      endif
       let s:untracked_hg[a:file] = untracked
     endif
     return untracked
@@ -211,7 +220,7 @@ function! s:reset_untracked_cache(shellcmdpost)
     " only clear cache, if there was no error, else the
     " system() command from get_git_untracked() would
     " overwrite the v:shell_error status
-    if v:shell_error
+    if v:shell_error && !s:shell_err_rw
       return
     endif
   endif
