@@ -148,6 +148,9 @@ values):
  >
   let g:airline_skip_empty_sections = 1
 <
+* display the statusline in the tabline (on top and hide the statusline
+* completly) >
+  let g:airline_statusline_ontop = 1
 ==============================================================================
 COMMANDS                                                  *airline-commands*
 
