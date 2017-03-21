@@ -111,25 +111,18 @@ function! s:CheckDefined(colors)
   return a:colors[0:1] + [fg, bg] + [a:colors[4]]
 endfunction
 
-function! s:Get(dict)
-  let nr=0
-  let val=''
-  let prefix={'0': ' guifg=',
-        \ '1': ' guibg=',
-        \ '2': ' ctermfg=',
-        \ '3': ' ctermbg=',
-        \ '4': ' gui='}
-
-  for i in a:dict
-    if i isnot# ''
-      let val .= prefix[nr].i
-      if nr == 4
-        let val .= ' cterm='.i. ' term='.i
-      endif
-    endif
-    let nr+=1
-  endfor
-  return val
+function! s:Get(list)
+  " keep this fast!
+  let guifg=a:list[0]
+  let guibg=a:list[1]
+  let cfg  =a:list[2]
+  let cbg  =a:list[3]
+  let t    =a:list[4]
+  return (guifg != '' ? ' guifg='.guifg : '').
+     \   (guibg != '' ? ' guibg='.guibg : '').
+     \   (cfg   != '' ? ' ctermfg='.cfg : '').
+     \   (cbg   != '' ? ' ctermbg='.cbg : '').
+     \   (t     != '' ? ' gui='.t.' cterm='.t. ' term='.t : '')
 endfunction
 
 function! s:exec_separator(dict, from, to, inverse, suffix)
