@@ -74,11 +74,7 @@ function! airline#highlighter#exec(group, colors)
   endif
   let colors = s:CheckDefined(colors)
   if old_hi != colors || !hlexists(a:group)
-    let cmd = printf('hi %s %s %s %s %s %s %s %s',
-        \ a:group, s:Get(colors, 0, 'guifg=', ''), s:Get(colors, 1, 'guibg=', ''),
-        \ s:Get(colors, 2, 'ctermfg=', ''), s:Get(colors, 3, 'ctermbg=', ''),
-        \ s:Get(colors, 4, 'gui=', ''), s:Get(colors, 4, 'cterm=', ''),
-        \ s:Get(colors, 4, 'term=', ''))
+    let cmd = printf('hi %s %s', a:group, s:Get(colors))
     exe cmd
   endif
 endfunction
@@ -115,13 +111,25 @@ function! s:CheckDefined(colors)
   return a:colors[0:1] + [fg, bg] + [a:colors[4]]
 endfunction
 
-function! s:Get(dict, key, prefix, default)
-  let val = get(a:dict, a:key, a:default)
-  if val isnot# a:default
-    return a:prefix.val
-  else
-    return ''
-  endif
+function! s:Get(dict)
+  let nr=0
+  let val=''
+  let prefix={'0': ' guifg=',
+        \ '1': ' guibg=',
+        \ '2': ' ctermfg=',
+        \ '3': ' ctermbg=',
+        \ '4': ' gui='}
+
+  for i in a:dict
+    if i isnot# ''
+      let val .= prefix[nr].i
+      if nr == 4
+        let val .= ' cterm='.i. ' term='.i
+      endif
+    endif
+    let nr+=1
+  endfor
+  return val
 endfunction
 
 function! s:exec_separator(dict, from, to, inverse, suffix)
