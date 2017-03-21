@@ -116,8 +116,9 @@ function! s:CheckDefined(colors)
 endfunction
 
 function! s:Get(dict, key, prefix, default)
-  if get(a:dict, a:key, a:default) isnot# a:default
-    return a:prefix. get(a:dict, a:key)
+  let val = get(a:dict, a:key, a:default)
+  if val isnot# a:default
+    return a:prefix.val
   else
     return ''
   endif
